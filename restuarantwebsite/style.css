@@ -1,0 +1,95 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Hero Section */
+  #hero {
+    text-align: center;
+    padding: 50px;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    position: relative;
+  }
+  
+  #hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dark overlay for readability */
+    z-index: 1;
+  }
+  
+  #hero h1,
+  #hero p {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Menu Section */
+  #menu-section {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .menu-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .menu-item {
+    flex: 1 1 calc(33.333% - 40px); /* 3 items per row */
+    max-width: 300px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .menu-item img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  /* Footer Section */
+  footer {
+    background: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  footer a {
+    color: #00aced;
+    text-decoration: none;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .menu-item {
+      flex: 1 1 calc(50% - 20px); /* 2 items per row */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    #hero {
+      padding: 20px;
+    }
+  
+    .menu-item {
+      flex: 1 1 100%; /* 1 item per row */
+    }
+  }
+  
+  

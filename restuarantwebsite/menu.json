@@ -1,0 +1,18 @@
+[
+    {
+      "name": "Margherita Pizza",
+      "description": "Classic Italian pizza with fresh mozzarella and basil.",
+      "image": "https://tse3.mm.bing.net/th?id=OIP.A_7IadfotxHc56iM-XuY5AHaJd&pid=Api&P=0&h=180"
+    },
+    {
+      "name": "Caesar Salad",
+      "description": "Crispy romaine lettuce with Caesar dressing.",
+      "image": "https://tse4.mm.bing.net/th?id=OIP.NCuPWmNFY_pTSkNR5I_OHwHaJQ&pid=Api&P=0&h=180"
+    },
+    {
+      "name": "Spaghetti Carbonara",
+      "description": "Creamy spaghetti with pancetta and parmesan.",
+      "image": "https://tse2.mm.bing.net/th?id=OIP.-L2zuKj5SBswlGEfZetZqgHaJ4&pid=Api&P=0&h=180"
+    }
+  ]
+  

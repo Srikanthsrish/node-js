@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restaurant Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .menu-item {
+      background-color: white;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item h3 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+
+    .menu-item p {
+      margin: 5px 0;
+    }
+
+    .price {
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Restaurant Menu</h1>
+  
+  <div id="menu-container"></div>
+
+  <script>
+    // Function to fetch the menu data from the API and display it
+    async function fetchMenu() {
+      try {
+        // Fetching the menu data from the backend API
+        const response = await fetch("http://localhost/api/menu");
+        const menu = await response.json();
+
+        // Select the menu container to display items
+        const menuContainer = document.getElementById('menu-container');
+        menuContainer.innerHTML = ''; // Clear any existing menu data
+
+        // Loop through the menu data and display each item
+        menu.forEach(item => {
+          const menuItemDiv = document.createElement('div');
+          menuItemDiv.classList.add('menu-item');
+          menuItemDiv.innerHTML = `
+            <h3>${item.name}</h3>
+            <p>${item.description}</p>
+            <p><span class="price">$${item.price.toFixed(2)}</span></p>
+            <p><em>Category: ${item.category}</em></p>
+          `;
+          menuContainer.appendChild(menuItemDiv);
+        });
+      } catch (error) {
+        console.error('Error fetching menu data:', error);
+        const menuContainer = document.getElementById('menu-container');
+        menuContainer.innerHTML = '<p>Sorry, there was an error loading the menu.</p>';
+      }
+    }
+
+    // Call the fetchMenu function when the page loads
+    window.onload = fetchMenu;
+  </script>
+
+</body>
+</html>

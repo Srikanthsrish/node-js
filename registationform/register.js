@@ -10,7 +10,6 @@ const otp = require("../otp/otp.js"); // Module for generating OTPs
 const connection = require("../mysqlconnections/connect.js"); // MySQL connection setup
 
 const port = 3003; // Port for the server
-
 // Middleware to parse request body
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -45,11 +44,11 @@ app.post("/register", upload.single("profilepic"), async (req, res) => {
   try {
     // Destructure request body
     const { username, password, email, confirmpassword } = req.body;
-    const profile = req.file.path;
+    const profilepic = req.file.path;
     const emailotp = otp(4);
 
     // Validate required fields
-    if (!username || !password || !confirmpassword || !email || !profile) {
+    if (!username || !password || !confirmpassword || !email || !profilepic) {
       return res.status(400).send({ error: "Username, Password, confirmpassword, Email, profile are required." });
     }
 
@@ -104,10 +103,19 @@ app.post("/register", upload.single("profilepic"), async (req, res) => {
           console.log('Email sent: ' + info.response);
         }
       });
+      const allowedExtensions = [".png", ".jpeg", ".jpg", ".gif"];
+      const profilepic= req.file.path;
+      const fileExtension = path.extname(profilepic).toLowerCase(); // Ensure case-insensitive matching
+      
+        // Validate file extension
+        if (!allowedExtensions.includes(fileExtension)) {
+          return res.status(400).send("Only .png, .jpeg, .jpg, .gif file extensions are accepted.");
+        }
+
 
       // SQL query to insert user data
       const sqlInsertion = "INSERT INTO register (username, password, email, emailotp, profilepic) VALUES (?, ?, ?, ?, ?);";
-      const values = [username, hashedPassword, email, emailotp, profile];
+      const values = [username, hashedPassword, email, emailotp, profilepic];
 
       // Insert user data into the database
       connection.query(sqlInsertion, values, (err, data) => {
@@ -129,7 +137,45 @@ app.post("/register", upload.single("profilepic"), async (req, res) => {
     res.status(500).send({ error: "Internal Server Error" });
   }
 });
+app.post("/login", (req, res) => {
+  const { name, userpassword } = req.body;
 
+  if (!name || !userpassword) {
+    return res.status(400).send({ error: "Username and password are required." });
+  }
+
+  // Query to find user by username
+  const query = "SELECT * FROM register WHERE username = ?";
+  connection.query(query, [name], async (err, results) => {
+    if (err) {
+      console.error("Error querying the database:", err.message);
+      return res.status(500).send({ error: "Database query failed." });
+    }
+
+    if (results.length === 0) {
+      // No user found with the provided username
+      return res.status(401).send({ error: "Invalid username or password." });
+    }
+
+    const user = results[0]; // First user from the query results
+    const storedHashedPassword = user.password; // Stored hashed password in the database
+
+    // Compare provided password with stored hashed password
+    const isPasswordMatch = await bcrypt.compare(userpassword, storedHashedPassword);
+
+    if (!isPasswordMatch) {
+      // Passwords do not match
+      return res.status(401).send({ error: "Invalid username or password." });
+    }
+
+    // Successful login
+    res.status(200).send({
+      status: 200,
+      message: "Login successful.",
+      user: { id: user.id, username: user.username }, // Avoid sending sensitive details like passwords
+    });
+  });
+});
 
 // Start the server
 app.listen(port, () => {
